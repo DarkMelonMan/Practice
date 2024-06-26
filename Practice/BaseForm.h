@@ -293,6 +293,7 @@ namespace Practice {
 
 	private: System::Void AddRowClick(System::Object^ sender, System::EventArgs^ e) {
 		mode = 0;
+		id = dataGridView1->Rows->Count;
 		AddEdit^ form = gcnew(AddEdit);
 		form->ShowDialog();
 	}

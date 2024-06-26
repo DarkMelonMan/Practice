@@ -12,6 +12,7 @@ namespace Practice {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::IO;
 
 	/// <summary>
 	/// Сводка для AddEdit
@@ -45,13 +46,13 @@ namespace Practice {
 	private: System::Windows::Forms::Label^ ArrivalPointLabel;
 	private: System::Windows::Forms::Label^ DaysLabel;
 
-	private: System::Windows::Forms::RadioButton^ RadioButton1;
-	private: System::Windows::Forms::RadioButton^ RadioButton2;
-	private: System::Windows::Forms::RadioButton^ RadioButton3;
-	private: System::Windows::Forms::RadioButton^ RadioButton4;
-	private: System::Windows::Forms::RadioButton^ RadioButton5;
-	private: System::Windows::Forms::RadioButton^ RadioButton6;
-	private: System::Windows::Forms::RadioButton^ RadioButton7;
+
+
+
+
+
+
+
 	private: System::Windows::Forms::Label^ DepartureTimeLabel;
 	private: System::Windows::Forms::TextBox^ DepartureTimeTextBox;
 
@@ -61,6 +62,13 @@ namespace Practice {
 	private: System::Windows::Forms::TextBox^ TicketCostTextBox;
 	private: System::Windows::Forms::Button^ DoneButton;
 	private: System::Windows::Forms::TextBox^ Info;
+	private: System::Windows::Forms::CheckBox^ checkBox1;
+	private: System::Windows::Forms::CheckBox^ checkBox2;
+	private: System::Windows::Forms::CheckBox^ checkBox3;
+	private: System::Windows::Forms::CheckBox^ checkBox4;
+	private: System::Windows::Forms::CheckBox^ checkBox5;
+	private: System::Windows::Forms::CheckBox^ checkBox6;
+	private: System::Windows::Forms::CheckBox^ checkBox7;
 	protected:
 
 	private:
@@ -82,13 +90,6 @@ namespace Practice {
 			this->ArrivalPointTextBox = (gcnew System::Windows::Forms::TextBox());
 			this->ArrivalPointLabel = (gcnew System::Windows::Forms::Label());
 			this->DaysLabel = (gcnew System::Windows::Forms::Label());
-			this->RadioButton1 = (gcnew System::Windows::Forms::RadioButton());
-			this->RadioButton2 = (gcnew System::Windows::Forms::RadioButton());
-			this->RadioButton3 = (gcnew System::Windows::Forms::RadioButton());
-			this->RadioButton4 = (gcnew System::Windows::Forms::RadioButton());
-			this->RadioButton5 = (gcnew System::Windows::Forms::RadioButton());
-			this->RadioButton6 = (gcnew System::Windows::Forms::RadioButton());
-			this->RadioButton7 = (gcnew System::Windows::Forms::RadioButton());
 			this->DepartureTimeLabel = (gcnew System::Windows::Forms::Label());
 			this->DepartureTimeTextBox = (gcnew System::Windows::Forms::TextBox());
 			this->ArrivalTimeLabel = (gcnew System::Windows::Forms::Label());
@@ -97,6 +98,13 @@ namespace Practice {
 			this->TicketCostTextBox = (gcnew System::Windows::Forms::TextBox());
 			this->DoneButton = (gcnew System::Windows::Forms::Button());
 			this->Info = (gcnew System::Windows::Forms::TextBox());
+			this->checkBox1 = (gcnew System::Windows::Forms::CheckBox());
+			this->checkBox2 = (gcnew System::Windows::Forms::CheckBox());
+			this->checkBox3 = (gcnew System::Windows::Forms::CheckBox());
+			this->checkBox4 = (gcnew System::Windows::Forms::CheckBox());
+			this->checkBox5 = (gcnew System::Windows::Forms::CheckBox());
+			this->checkBox6 = (gcnew System::Windows::Forms::CheckBox());
+			this->checkBox7 = (gcnew System::Windows::Forms::CheckBox());
 			this->SuspendLayout();
 			// 
 			// Label
@@ -158,76 +166,6 @@ namespace Practice {
 			this->DaysLabel->Size = System::Drawing::Size(109, 20);
 			this->DaysLabel->TabIndex = 5;
 			this->DaysLabel->Text = L"Дни недели";
-			// 
-			// RadioButton1
-			// 
-			this->RadioButton1->AutoSize = true;
-			this->RadioButton1->Location = System::Drawing::Point(24, 293);
-			this->RadioButton1->Name = L"RadioButton1";
-			this->RadioButton1->Size = System::Drawing::Size(47, 21);
-			this->RadioButton1->TabIndex = 6;
-			this->RadioButton1->Text = L"Пн";
-			this->RadioButton1->UseVisualStyleBackColor = true;
-			// 
-			// RadioButton2
-			// 
-			this->RadioButton2->AutoSize = true;
-			this->RadioButton2->Location = System::Drawing::Point(77, 293);
-			this->RadioButton2->Name = L"RadioButton2";
-			this->RadioButton2->Size = System::Drawing::Size(45, 21);
-			this->RadioButton2->TabIndex = 7;
-			this->RadioButton2->Text = L"Вт";
-			this->RadioButton2->UseVisualStyleBackColor = true;
-			// 
-			// RadioButton3
-			// 
-			this->RadioButton3->AutoSize = true;
-			this->RadioButton3->Location = System::Drawing::Point(123, 293);
-			this->RadioButton3->Name = L"RadioButton3";
-			this->RadioButton3->Size = System::Drawing::Size(46, 21);
-			this->RadioButton3->TabIndex = 8;
-			this->RadioButton3->Text = L"Ср";
-			this->RadioButton3->UseVisualStyleBackColor = true;
-			// 
-			// RadioButton4
-			// 
-			this->RadioButton4->AutoSize = true;
-			this->RadioButton4->Location = System::Drawing::Point(166, 293);
-			this->RadioButton4->Name = L"RadioButton4";
-			this->RadioButton4->Size = System::Drawing::Size(46, 21);
-			this->RadioButton4->TabIndex = 9;
-			this->RadioButton4->Text = L"Чт";
-			this->RadioButton4->UseVisualStyleBackColor = true;
-			// 
-			// RadioButton5
-			// 
-			this->RadioButton5->AutoSize = true;
-			this->RadioButton5->Location = System::Drawing::Point(212, 293);
-			this->RadioButton5->Name = L"RadioButton5";
-			this->RadioButton5->Size = System::Drawing::Size(46, 21);
-			this->RadioButton5->TabIndex = 10;
-			this->RadioButton5->Text = L"Пт";
-			this->RadioButton5->UseVisualStyleBackColor = true;
-			// 
-			// RadioButton6
-			// 
-			this->RadioButton6->AutoSize = true;
-			this->RadioButton6->Location = System::Drawing::Point(98, 320);
-			this->RadioButton6->Name = L"RadioButton6";
-			this->RadioButton6->Size = System::Drawing::Size(46, 21);
-			this->RadioButton6->TabIndex = 11;
-			this->RadioButton6->Text = L"Сб";
-			this->RadioButton6->UseVisualStyleBackColor = true;
-			// 
-			// RadioButton7
-			// 
-			this->RadioButton7->AutoSize = true;
-			this->RadioButton7->Location = System::Drawing::Point(150, 320);
-			this->RadioButton7->Name = L"RadioButton7";
-			this->RadioButton7->Size = System::Drawing::Size(45, 21);
-			this->RadioButton7->TabIndex = 12;
-			this->RadioButton7->Text = L"Вс";
-			this->RadioButton7->UseVisualStyleBackColor = true;
 			// 
 			// DepartureTimeLabel
 			// 
@@ -306,11 +244,88 @@ namespace Practice {
 			this->Info->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
 			this->Info->Visible = false;
 			// 
+			// checkBox1
+			// 
+			this->checkBox1->AutoSize = true;
+			this->checkBox1->Location = System::Drawing::Point(23, 295);
+			this->checkBox1->Name = L"checkBox1";
+			this->checkBox1->Size = System::Drawing::Size(48, 21);
+			this->checkBox1->TabIndex = 21;
+			this->checkBox1->Text = L"Пн";
+			this->checkBox1->UseVisualStyleBackColor = true;
+			// 
+			// checkBox2
+			// 
+			this->checkBox2->AutoSize = true;
+			this->checkBox2->Location = System::Drawing::Point(77, 295);
+			this->checkBox2->Name = L"checkBox2";
+			this->checkBox2->Size = System::Drawing::Size(46, 21);
+			this->checkBox2->TabIndex = 22;
+			this->checkBox2->Text = L"Вт";
+			this->checkBox2->UseVisualStyleBackColor = true;
+			// 
+			// checkBox3
+			// 
+			this->checkBox3->AutoSize = true;
+			this->checkBox3->Location = System::Drawing::Point(120, 295);
+			this->checkBox3->Name = L"checkBox3";
+			this->checkBox3->Size = System::Drawing::Size(47, 21);
+			this->checkBox3->TabIndex = 23;
+			this->checkBox3->Text = L"Ср";
+			this->checkBox3->UseVisualStyleBackColor = true;
+			// 
+			// checkBox4
+			// 
+			this->checkBox4->AutoSize = true;
+			this->checkBox4->Location = System::Drawing::Point(165, 295);
+			this->checkBox4->Name = L"checkBox4";
+			this->checkBox4->Size = System::Drawing::Size(47, 21);
+			this->checkBox4->TabIndex = 24;
+			this->checkBox4->Text = L"Чт";
+			this->checkBox4->UseVisualStyleBackColor = true;
+			// 
+			// checkBox5
+			// 
+			this->checkBox5->AutoSize = true;
+			this->checkBox5->Location = System::Drawing::Point(208, 295);
+			this->checkBox5->Name = L"checkBox5";
+			this->checkBox5->Size = System::Drawing::Size(47, 21);
+			this->checkBox5->TabIndex = 25;
+			this->checkBox5->Text = L"Пт";
+			this->checkBox5->UseVisualStyleBackColor = true;
+			// 
+			// checkBox6
+			// 
+			this->checkBox6->AutoSize = true;
+			this->checkBox6->Location = System::Drawing::Point(86, 320);
+			this->checkBox6->Name = L"checkBox6";
+			this->checkBox6->Size = System::Drawing::Size(47, 21);
+			this->checkBox6->TabIndex = 26;
+			this->checkBox6->Text = L"Сб";
+			this->checkBox6->UseVisualStyleBackColor = true;
+			// 
+			// checkBox7
+			// 
+			this->checkBox7->AutoSize = true;
+			this->checkBox7->Location = System::Drawing::Point(139, 320);
+			this->checkBox7->Name = L"checkBox7";
+			this->checkBox7->Size = System::Drawing::Size(46, 21);
+			this->checkBox7->TabIndex = 27;
+			this->checkBox7->Text = L"Вс";
+			this->checkBox7->UseVisualStyleBackColor = true;
+			// 
 			// AddEdit
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(492, 466);
+			this->Controls->Add(this->checkBox7);
+			this->Controls->Add(this->checkBox6);
+			this->Controls->Add(this->checkBox5);
+			this->Controls->Add(this->checkBox4);
+			this->Controls->Add(this->checkBox3);
+			this->Controls->Add(this->checkBox2);
+			this->Controls->Add(this->checkBox1);
 			this->Controls->Add(this->Info);
 			this->Controls->Add(this->DoneButton);
 			this->Controls->Add(this->TicketCostTextBox);
@@ -319,13 +334,6 @@ namespace Practice {
 			this->Controls->Add(this->ArrivalTimeLabel);
 			this->Controls->Add(this->DepartureTimeTextBox);
 			this->Controls->Add(this->DepartureTimeLabel);
-			this->Controls->Add(this->RadioButton7);
-			this->Controls->Add(this->RadioButton6);
-			this->Controls->Add(this->RadioButton5);
-			this->Controls->Add(this->RadioButton4);
-			this->Controls->Add(this->RadioButton3);
-			this->Controls->Add(this->RadioButton2);
-			this->Controls->Add(this->RadioButton1);
 			this->Controls->Add(this->DaysLabel);
 			this->Controls->Add(this->ArrivalPointLabel);
 			this->Controls->Add(this->ArrivalPointTextBox);
@@ -342,23 +350,45 @@ namespace Practice {
 #pragma endregion
 	private: System::Void DoneButton_Click(System::Object^ sender, System::EventArgs^ e) {
 		array<TextBox^>^ textBoxes = {PlaneTypeTextBox, ArrivalPointTextBox, DepartureTimeTextBox, ArrivalTimeTextBox, TicketCostTextBox};
-		array<RadioButton^>^ radioButtons = { RadioButton1, RadioButton2, RadioButton3, RadioButton4, RadioButton5, RadioButton6, RadioButton7 };
+		array<CheckBox^>^ checkBoxes = { checkBox1, checkBox2, checkBox3, checkBox4, checkBox5, checkBox6, checkBox7 };
 		bool flag1 = true;
 		bool flag2 = false;
+		String^ days = L"";
 		for each (TextBox ^ textBox in textBoxes) {
 			if (textBox->TextLength == 0) {
 				flag1 = false;
 				break;
 			}
 		}
-		for each (RadioButton ^ radioButton in radioButtons) {
-			if (radioButton->Checked) {
+		for (int i = 0; i < 7; i++) {
+			if (checkBoxes[i]->Checked == true) {
 				flag2 = true;
 			}
 		}
 		if (flag1 && flag2) {
+			for (int i = 0; i < 7; i++) {
+				if (checkBoxes[i]->Checked == true) {
+					days = String::Concat(days, (i + 1).ToString(), ",");
+				}
+			}
+			if (days->EndsWith(","))
+				days = days->Remove(days->Length - 1);
+			String^ result = String::Concat(id.ToString(), " ", PlaneTypeTextBox->Text, " ", ArrivalPointTextBox->Text, " ", 
+				days, " ", DepartureTimeTextBox->Text, " ", ArrivalTimeTextBox->Text, " ", TicketCostTextBox->Text, "\n");
 
-
+			if (!mode)
+				File::AppendAllText(BASE, result);
+			else {
+				array<String^>^ lines = File::ReadAllLines(BASE);
+				result = result->Remove(result->Length - 1);
+				for (int i = 0; i < lines->Length; i++)
+				{
+					if (Int32::Parse(lines[i]->Split(L' ')[0]) == id) {
+						lines[i] = result;
+					}
+				}
+				File::WriteAllLines(BASE, lines);
+			}
 			Close();
 		}
 		else {
@@ -394,7 +424,25 @@ private: System::Void ArrivalPointTextBox_Validated(System::Object^ sender, Syst
 private: System::Void AddEdit_Activated(System::Object^ sender, System::EventArgs^ e) {
 	if (mode) {
 		Label->Text = "Изменение строки";
-
+		array<String^>^ lines = File::ReadAllLines(BASE);
+		String^ line;
+		for each (String ^ str in lines)
+		{
+			if (Int32::Parse(str->Split(L' ')[0]) == id) {
+				line = str;
+			}
+		}
+		PlaneTypeTextBox->Text = line->Split(L' ')[1];
+		ArrivalPointTextBox->Text = line->Split(L' ')[2];
+		array<String^>^ days;
+		array<CheckBox^>^ checkBoxes = { checkBox1, checkBox2, checkBox3, checkBox4, checkBox5, checkBox6, checkBox7 };
+		days = line->Split(L' ')[3]->Split(L',');
+		for each (String ^ str in days) {
+			checkBoxes[Int32::Parse(str) - 1]->Checked = true;
+		}
+		DepartureTimeTextBox->Text = line->Split(L' ')[4];
+		ArrivalTimeTextBox->Text = line->Split(L' ')[5];
+		TicketCostTextBox->Text = line->Split(L' ')[6];
 	}
 }
 };
