@@ -125,6 +125,9 @@
     <ClCompile Include="MainAppMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Add(Edit).h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="AdminMode.h">
       <FileType>CppForm</FileType>
     </ClInclude>
@@ -139,6 +142,9 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Add(Edit).resx">
+      <DependentUpon>Add(Edit).h</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="BaseForm.resx">
       <DependentUpon>BaseForm.h</DependentUpon>
     </EmbeddedResource>
