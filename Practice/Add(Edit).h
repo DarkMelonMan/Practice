@@ -184,6 +184,8 @@ namespace Practice {
 			this->DepartureTimeTextBox->Size = System::Drawing::Size(185, 22);
 			this->DepartureTimeTextBox->TabIndex = 14;
 			this->DepartureTimeTextBox->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->DepartureTimeTextBox->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddEdit::DepartureTimeTextBox_Validating);
+			this->DepartureTimeTextBox->Validated += gcnew System::EventHandler(this, &AddEdit::DepartureTimeTextBox_Validated);
 			// 
 			// ArrivalTimeLabel
 			// 
@@ -202,6 +204,8 @@ namespace Practice {
 			this->ArrivalTimeTextBox->Size = System::Drawing::Size(185, 22);
 			this->ArrivalTimeTextBox->TabIndex = 16;
 			this->ArrivalTimeTextBox->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->ArrivalTimeTextBox->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddEdit::ArrivalTimeTextBox_Validating);
+			this->ArrivalTimeTextBox->Validated += gcnew System::EventHandler(this, &AddEdit::ArrivalTimeTextBox_Validated);
 			// 
 			// TicketCostLabel
 			// 
@@ -220,6 +224,8 @@ namespace Practice {
 			this->TicketCostTextBox->Size = System::Drawing::Size(185, 22);
 			this->TicketCostTextBox->TabIndex = 18;
 			this->TicketCostTextBox->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->TicketCostTextBox->Validating += gcnew System::ComponentModel::CancelEventHandler(this, &AddEdit::TicketCostTextBox_Validating);
+			this->TicketCostTextBox->Validated += gcnew System::EventHandler(this, &AddEdit::TicketCostTextBox_Validated);
 			// 
 			// DoneButton
 			// 
@@ -237,8 +243,9 @@ namespace Practice {
 			// 
 			this->Info->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 10));
 			this->Info->Location = System::Drawing::Point(77, 421);
+			this->Info->Multiline = true;
 			this->Info->Name = L"Info";
-			this->Info->Size = System::Drawing::Size(351, 26);
+			this->Info->Size = System::Drawing::Size(351, 79);
 			this->Info->TabIndex = 20;
 			this->Info->Text = L"Не все поля ещё заполнены";
 			this->Info->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
@@ -318,7 +325,7 @@ namespace Practice {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(492, 466);
+			this->ClientSize = System::Drawing::Size(492, 524);
 			this->Controls->Add(this->checkBox7);
 			this->Controls->Add(this->checkBox6);
 			this->Controls->Add(this->checkBox5);
@@ -347,6 +354,7 @@ namespace Practice {
 			this->PerformLayout();
 
 		}
+
 #pragma endregion
 	private: System::Void DoneButton_Click(System::Object^ sender, System::EventArgs^ e) {
 		array<TextBox^>^ textBoxes = {PlaneTypeTextBox, ArrivalPointTextBox, DepartureTimeTextBox, ArrivalTimeTextBox, TicketCostTextBox};
@@ -396,6 +404,7 @@ namespace Practice {
 			Info->Text = "Не все поля были заполнены";
 		}
 	}
+
 private: System::Void PlaneTypeTextBox_Validating(System::Object^ sender, System::ComponentModel::CancelEventArgs^ e) {
 	if (!ValidText(PlaneTypeTextBox->Text))
 	{
@@ -407,6 +416,71 @@ private: System::Void PlaneTypeTextBox_Validating(System::Object^ sender, System
 	private: bool ValidText(String^ text) {
 		return text->Length <= 30 && text->Length > 1;
 	}
+
+	private: bool ValidTime(String^ text) {
+		int hours, minutes;
+		if (text->Length == 4 && text[1] == ':') {
+			if (Int32::TryParse(text[0].ToString(), hours) && Int32::TryParse(String::Concat(text[2], text[3]), minutes)) {
+				if (minutes < 60)
+					return true;
+			}
+		}
+		else if (text->Length == 5 && text[2] == ':') {
+			if (Int32::TryParse(String::Concat(text[0], text[1]), hours) && Int32::TryParse(String::Concat(text[3], text[4]), minutes)) {
+				if (minutes < 60 && hours < 24)
+					return true;
+			}
+		}
+		return false;
+	}
+
+	private: bool ValidCost(String^ text) {
+		int fractionalCost;
+		int intCost;
+		if (text->Contains(",") && !text->Contains(".")) {
+			if (text->IndexOf(',') == text->LastIndexOf(',') && Int32::TryParse(text->Split(',')[0], intCost)
+				&& Int32::TryParse(text->Split(',')[1], fractionalCost)) {
+				return intCost + fractionalCost > 0;
+			}
+		}
+		else if (text->Contains(".") && !text->Contains(",")) {
+			if (text->IndexOf('.') == text->LastIndexOf('.') && Int32::TryParse(text->Split('.')[0], intCost)
+				&& Int32::TryParse(text->Split('.')[1], fractionalCost)) {
+				return intCost + fractionalCost > 0;
+			}
+		}
+		else if (Int32::TryParse(text, intCost))
+			return intCost > 0;
+		return false;
+	}
+
+	private: bool ValidTime(String^ departureTime, String^ arrivalTime) {
+		if (ValidTime(departureTime) && ValidTime(arrivalTime)) {
+			int intDepTime = GetTimeInMinutes(departureTime);
+			int intArrTime = GetTimeInMinutes(arrivalTime);
+			if (intArrTime < intDepTime)
+				intArrTime += 1440;
+			return (intArrTime - intDepTime) <= 1160;
+		}
+		return true;
+	}
+
+	private: int GetTimeInMinutes(String^ time) {
+		if (ValidTime(time)) {
+			int hours, minutes;
+			if (time->Length == 4 && time[1] == ':') {
+				hours = Int32::Parse(time[0].ToString());
+				minutes = Int32::Parse(String::Concat(time[2], time[3]));
+			}
+			else if (time->Length == 5 && time[2] == ':') {
+				hours = Int32::Parse(String::Concat(time[0], time[1]));
+				minutes = Int32::Parse(String::Concat(time[3], time[4]));
+			}
+			return hours * 60 + minutes;
+		}
+		return 0;
+	}
+
 private: System::Void ArrivalPointTextBox_Validating(System::Object^ sender, System::ComponentModel::CancelEventArgs^ e) {
 	if (!ValidText(ArrivalPointTextBox->Text))
 	{
@@ -415,12 +489,15 @@ private: System::Void ArrivalPointTextBox_Validating(System::Object^ sender, Sys
 		Info->Text = "Размер текста должен быть от 2 до 30 символов";
 	}
 }
+
 private: System::Void PlaneTypeTextBox_Validated(System::Object^ sender, System::EventArgs^ e) {
 	Info->Visible = false;
 }
+
 private: System::Void ArrivalPointTextBox_Validated(System::Object^ sender, System::EventArgs^ e) {
 	Info->Visible = false;
 }
+
 private: System::Void AddEdit_Activated(System::Object^ sender, System::EventArgs^ e) {
 	if (mode) {
 		Label->Text = "Изменение строки";
@@ -443,6 +520,75 @@ private: System::Void AddEdit_Activated(System::Object^ sender, System::EventArg
 		DepartureTimeTextBox->Text = line->Split(L' ')[4];
 		ArrivalTimeTextBox->Text = line->Split(L' ')[5];
 		TicketCostTextBox->Text = line->Split(L' ')[6];
+	}
+}
+
+private: System::Void DepartureTimeTextBox_Validating(System::Object^ sender, System::ComponentModel::CancelEventArgs^ e) {
+	if (!ValidTime(DepartureTimeTextBox->Text)) {
+		e->Cancel = true;
+		Info->Visible = true;
+		Info->Text = "Формат ввода времени: чч:мм или ч:мм";
+	}
+	else if (!ValidTime(DepartureTimeTextBox->Text, ArrivalTimeTextBox->Text)) {
+		e->Cancel = true;
+		Info->Visible = true;
+		Info->Text = "Разность между временем вылета и временем прилёта не может составлять больше 19 часов 20 минут";
+	}
+}
+
+private: System::Void DepartureTimeTextBox_Validated(System::Object^ sender, System::EventArgs^ e) {
+	Info->Visible = false;
+	String^ text = DepartureTimeTextBox->Text;
+	if (text->Length == 4 && text[1] == ':') {
+		text = String::Concat("0", text);
+	}
+	DepartureTimeTextBox->Text = text;
+}
+
+private: System::Void ArrivalTimeTextBox_Validating(System::Object^ sender, System::ComponentModel::CancelEventArgs^ e) {
+	if (!ValidTime(ArrivalTimeTextBox->Text)) {
+		e->Cancel = true;
+		Info->Visible = true;
+		Info->Text = "Формат ввода времени: чч:мм или ч:мм";
+	}
+	else if (!ValidTime(DepartureTimeTextBox->Text, ArrivalTimeTextBox->Text)) {
+		e->Cancel = true;
+		Info->Visible = true;
+		Info->Text = "Разность между временем вылета и временем прилёта не может составлять больше 19 часов 20 минут";
+	}
+}
+
+private: System::Void ArrivalTimeTextBox_Validated(System::Object^ sender, System::EventArgs^ e) {
+	Info->Visible = false;
+	String^ text = ArrivalTimeTextBox->Text;
+	if (text->Length == 4 && text[1] == ':') {
+		text = String::Concat("0", text);
+	}
+	ArrivalTimeTextBox->Text = text;
+}
+
+private: System::Void TicketCostTextBox_Validated(System::Object^ sender, System::EventArgs^ e) {
+	Info->Visible = false;
+	String^ text = TicketCostTextBox->Text;
+	if (text->Contains(",")) {
+		text = String::Join(".", text->Split(','));
+	}
+	if (!text->Contains(".")) {
+		text = String::Concat(text, ".00");
+	}
+	if (text->Contains(".")) {
+		if (text->Split('.')[1]->Length > 2) {
+			text = text->Remove(text->Split('.')[0]->Length + 3);
+		}
+	}
+	TicketCostTextBox->Text = text;
+}
+
+private: System::Void TicketCostTextBox_Validating(System::Object^ sender, System::ComponentModel::CancelEventArgs^ e) {
+	if (!ValidCost(TicketCostTextBox->Text)) {
+		e->Cancel = true;
+		Info->Visible = true;
+		Info->Text = "Цена билета должна быть числом больше нуля";
 	}
 }
 };
