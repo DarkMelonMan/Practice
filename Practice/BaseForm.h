@@ -1,7 +1,7 @@
 #pragma once
 #define BASE "base.txt"
 #include "Add(Edit).h"
-
+#include "RequestForm.h"
 extern int admin;
 int mode;
 int id;
@@ -210,6 +210,7 @@ namespace Practice {
 			this->RequestButton->TabIndex = 5;
 			this->RequestButton->Text = L"”ниверсальный запрос";
 			this->RequestButton->UseVisualStyleBackColor = true;
+			this->RequestButton->Click += gcnew System::EventHandler(this, &BaseForm::RequestButton_Click);
 			// 
 			// EditButton
 			// 
@@ -351,6 +352,10 @@ namespace Practice {
 	}
 private: System::Void ExitButtonClick(System::Object^ sender, System::EventArgs^ e) {
 	Close();
+}
+private: System::Void RequestButton_Click(System::Object^ sender, System::EventArgs^ e) {
+	RequestForm^ form = gcnew(RequestForm);
+	form->ShowDialog();
 }
 };
 }

@@ -140,6 +140,9 @@
     <ClInclude Include="MainAppMenu.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="RequestForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Add(Edit).resx">
@@ -153,6 +156,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MainAppMenu.resx" />
     <EmbeddedResource Include="MainForm.resx" />
+    <EmbeddedResource Include="RequestForm.resx">
+      <DependentUpon>RequestForm.h</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

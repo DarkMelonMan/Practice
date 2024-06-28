@@ -413,11 +413,11 @@ private: System::Void PlaneTypeTextBox_Validating(System::Object^ sender, System
 		Info->Text = "Размер текста должен быть от 2 до 30 символов";
 	}
 }
-	private: bool ValidText(String^ text) {
+	public: bool ValidText(String^ text) {
 		return text->Length <= 30 && text->Length > 1;
 	}
 
-	private: bool ValidTime(String^ text) {
+	public: bool ValidTime(String^ text) {
 		int hours, minutes;
 		if (text->Length == 4 && text[1] == ':') {
 			if (Int32::TryParse(text[0].ToString(), hours) && Int32::TryParse(String::Concat(text[2], text[3]), minutes)) {
@@ -434,27 +434,27 @@ private: System::Void PlaneTypeTextBox_Validating(System::Object^ sender, System
 		return false;
 	}
 
-	private: bool ValidCost(String^ text) {
+	public: bool ValidCost(String^ text) {
 		int fractionalCost;
 		int intCost;
 		if (text->Contains(",") && !text->Contains(".")) {
 			if (text->IndexOf(',') == text->LastIndexOf(',') && Int32::TryParse(text->Split(',')[0], intCost)
 				&& Int32::TryParse(text->Split(',')[1], fractionalCost)) {
-				return intCost + fractionalCost > 0;
+				return (intCost + fractionalCost) > 0 && intCost < 10000000;
 			}
 		}
 		else if (text->Contains(".") && !text->Contains(",")) {
 			if (text->IndexOf('.') == text->LastIndexOf('.') && Int32::TryParse(text->Split('.')[0], intCost)
 				&& Int32::TryParse(text->Split('.')[1], fractionalCost)) {
-				return intCost + fractionalCost > 0;
+				return (intCost + fractionalCost > 0) && intCost < 10000000;
 			}
 		}
 		else if (Int32::TryParse(text, intCost))
-			return intCost > 0;
+			return intCost > 0 && intCost < 10000000;
 		return false;
 	}
 
-	private: bool ValidTime(String^ departureTime, String^ arrivalTime) {
+	public: bool ValidTime(String^ departureTime, String^ arrivalTime) {
 		if (ValidTime(departureTime) && ValidTime(arrivalTime)) {
 			int intDepTime = GetTimeInMinutes(departureTime);
 			int intArrTime = GetTimeInMinutes(arrivalTime);
@@ -465,7 +465,7 @@ private: System::Void PlaneTypeTextBox_Validating(System::Object^ sender, System
 		return true;
 	}
 
-	private: int GetTimeInMinutes(String^ time) {
+	public: int GetTimeInMinutes(String^ time) {
 		if (ValidTime(time)) {
 			int hours, minutes;
 			if (time->Length == 4 && time[1] == ':') {
