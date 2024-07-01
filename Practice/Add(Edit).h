@@ -1,5 +1,6 @@
 #pragma once
 #include "BaseForm.h"
+#include "Util.h"
 
 extern int mode;
 extern int id;
@@ -413,73 +414,6 @@ private: System::Void PlaneTypeTextBox_Validating(System::Object^ sender, System
 		Info->Text = "Размер текста должен быть от 2 до 30 символов";
 	}
 }
-	public: bool ValidText(String^ text) {
-		return text->Length <= 30 && text->Length > 1;
-	}
-
-	public: bool ValidTime(String^ text) {
-		int hours, minutes;
-		if (text->Length == 4 && text[1] == ':') {
-			if (Int32::TryParse(text[0].ToString(), hours) && Int32::TryParse(String::Concat(text[2], text[3]), minutes)) {
-				if (minutes < 60)
-					return true;
-			}
-		}
-		else if (text->Length == 5 && text[2] == ':') {
-			if (Int32::TryParse(String::Concat(text[0], text[1]), hours) && Int32::TryParse(String::Concat(text[3], text[4]), minutes)) {
-				if (minutes < 60 && hours < 24)
-					return true;
-			}
-		}
-		return false;
-	}
-
-	public: bool ValidCost(String^ text) {
-		int fractionalCost;
-		int intCost;
-		if (text->Contains(",") && !text->Contains(".")) {
-			if (text->IndexOf(',') == text->LastIndexOf(',') && Int32::TryParse(text->Split(',')[0], intCost)
-				&& Int32::TryParse(text->Split(',')[1], fractionalCost)) {
-				return (intCost + fractionalCost) > 0 && intCost < 10000000;
-			}
-		}
-		else if (text->Contains(".") && !text->Contains(",")) {
-			if (text->IndexOf('.') == text->LastIndexOf('.') && Int32::TryParse(text->Split('.')[0], intCost)
-				&& Int32::TryParse(text->Split('.')[1], fractionalCost)) {
-				return (intCost + fractionalCost > 0) && intCost < 10000000;
-			}
-		}
-		else if (Int32::TryParse(text, intCost))
-			return intCost > 0 && intCost < 10000000;
-		return false;
-	}
-
-	public: bool ValidTime(String^ departureTime, String^ arrivalTime) {
-		if (ValidTime(departureTime) && ValidTime(arrivalTime)) {
-			int intDepTime = GetTimeInMinutes(departureTime);
-			int intArrTime = GetTimeInMinutes(arrivalTime);
-			if (intArrTime < intDepTime)
-				intArrTime += 1440;
-			return (intArrTime - intDepTime) <= 1160;
-		}
-		return true;
-	}
-
-	public: int GetTimeInMinutes(String^ time) {
-		if (ValidTime(time)) {
-			int hours, minutes;
-			if (time->Length == 4 && time[1] == ':') {
-				hours = Int32::Parse(time[0].ToString());
-				minutes = Int32::Parse(String::Concat(time[2], time[3]));
-			}
-			else if (time->Length == 5 && time[2] == ':') {
-				hours = Int32::Parse(String::Concat(time[0], time[1]));
-				minutes = Int32::Parse(String::Concat(time[3], time[4]));
-			}
-			return hours * 60 + minutes;
-		}
-		return 0;
-	}
 
 private: System::Void ArrivalPointTextBox_Validating(System::Object^ sender, System::ComponentModel::CancelEventArgs^ e) {
 	if (!ValidText(ArrivalPointTextBox->Text))
@@ -570,15 +504,15 @@ private: System::Void ArrivalTimeTextBox_Validated(System::Object^ sender, Syste
 private: System::Void TicketCostTextBox_Validated(System::Object^ sender, System::EventArgs^ e) {
 	Info->Visible = false;
 	String^ text = TicketCostTextBox->Text;
-	if (text->Contains(",")) {
-		text = String::Join(".", text->Split(','));
-	}
-	if (!text->Contains(".")) {
-		text = String::Concat(text, ".00");
-	}
 	if (text->Contains(".")) {
-		if (text->Split('.')[1]->Length > 2) {
-			text = text->Remove(text->Split('.')[0]->Length + 3);
+		text = String::Join(",", text->Split('.'));
+	}
+	if (!text->Contains(",")) {
+		text = String::Concat(text, ",00");
+	}
+	if (text->Contains(",")) {
+		if (text->Split(',')[1]->Length > 2) {
+			text = text->Remove(text->Split(',')[0]->Length + 3);
 		}
 	}
 	TicketCostTextBox->Text = text;

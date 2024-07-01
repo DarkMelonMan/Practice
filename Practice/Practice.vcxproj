@@ -123,6 +123,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainAppMenu.cpp" />
+    <ClCompile Include="Util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Add(Edit).h">
@@ -143,6 +144,7 @@
     <ClInclude Include="RequestForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="Util.h" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Add(Edit).resx">
