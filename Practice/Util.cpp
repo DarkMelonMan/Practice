@@ -6,7 +6,7 @@ using namespace System::IO;
 
 
 bool ValidText(String^ text) {
-	return text->Length <= 30 && text->Length > 1;
+	return text->Length <= 30 && text->Length > 1 && !text->Contains(" ");
 }
 
 bool ValidTime(String^ text) {

@@ -411,7 +411,7 @@ private: System::Void PlaneTypeTextBox_Validating(System::Object^ sender, System
 	{
 		e->Cancel = true;
 		Info->Visible = true;
-		Info->Text = "Размер текста должен быть от 2 до 30 символов";
+		Info->Text = "Размер текста должен быть от 2 до 30 символов, и текст не может содержать пробелы";
 	}
 }
 
@@ -420,7 +420,7 @@ private: System::Void ArrivalPointTextBox_Validating(System::Object^ sender, Sys
 	{
 		e->Cancel = true;
 		Info->Visible = true;
-		Info->Text = "Размер текста должен быть от 2 до 30 символов";
+		Info->Text = "Размер текста должен быть от 2 до 30 символов, и текст не может содержать пробелы";
 	}
 }
 
