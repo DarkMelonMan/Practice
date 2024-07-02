@@ -748,6 +748,8 @@ namespace Practice {
 
 #pragma endregion
 		private: System::Void RequestForm_Activated(System::Object^ sender, System::EventArgs^ e) {
+			FileStream^ file = File::Exists(BASE) ? File::OpenRead(BASE) : File::Create(BASE);
+			file->Close();
 			array<String^>^ lines = File::ReadAllLines(BASE);
 			array<String^>^ planeTypes = gcnew array<String^>(lines->Length);
 			array<String^>^ arrivalPoints = gcnew array<String^>(lines->Length);

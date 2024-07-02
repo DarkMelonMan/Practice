@@ -6,6 +6,7 @@
 #include "BaseForm.h"
 #include "AdminMode.h"
 #include "Description.h"
+#include "Game.h"
 
 int admin = 0;
 
@@ -136,8 +137,9 @@ namespace Practice {
 			this->GameButton->Name = L"GameButton";
 			this->GameButton->Size = System::Drawing::Size(290, 41);
 			this->GameButton->TabIndex = 5;
-			this->GameButton->Text = L"Игра \"Столицы стран\"";
+			this->GameButton->Text = L"Игра \"Найди все пары\"";
 			this->GameButton->UseVisualStyleBackColor = true;
+			this->GameButton->Click += gcnew System::EventHandler(this, &MainAppMenu::GameButton_Click);
 			// 
 			// AdminModeButton
 			// 
@@ -174,11 +176,12 @@ namespace Practice {
 			this->Controls->Add(this->ChangeModeButton);
 			this->Controls->Add(this->Mode);
 			this->Controls->Add(this->label1);
-			this->Activated += gcnew System::EventHandler(this, &MainAppMenu::MainAppMenu_Activated);
 			this->Name = L"MainAppMenu";
 			this->Text = L"Главное меню";
+			this->Activated += gcnew System::EventHandler(this, &MainAppMenu::MainAppMenu_Activated);
 			this->ResumeLayout(false);
 			this->PerformLayout();
+
 		}
 #pragma endregion
 	private: System::Void DescriptionButton_Click(System::Object^ sender, System::EventArgs^ e) {
@@ -212,5 +215,9 @@ namespace Practice {
 			this->ChangeModeButton->Visible = true;
 		}
 	}
-	};
+	private: System::Void GameButton_Click(System::Object^ sender, System::EventArgs^ e) {
+		Game^ form = gcnew(Game);
+		form->ShowDialog();
+	}
+};
 }
