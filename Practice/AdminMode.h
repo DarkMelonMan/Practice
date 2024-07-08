@@ -1,5 +1,5 @@
 #pragma once
-#define PASSWORD L"125861"
+#define PASSWORD L"125861" // пароль администратора
 
 extern int admin;
 
@@ -155,7 +155,6 @@ namespace Practice {
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Text = L"¬вод парол€ администратора";
 			this->TopMost = true;
-			this->Load += gcnew System::EventHandler(this, &AdminMode::AdminMode_Load);
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -174,9 +173,7 @@ namespace Practice {
 		}
 	}
 	private: System::Void CancelButton_Click(System::Object^ sender, System::EventArgs^ e) { //отмена и выход из формы
-		Close();
-	}
-	private: System::Void AdminMode_Load(System::Object^ sender, System::EventArgs^ e) {
+		Close(); //закрыть форму
 	}
 	};
 }

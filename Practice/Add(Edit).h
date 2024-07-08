@@ -349,7 +349,11 @@ namespace Practice {
 			this->Controls->Add(this->PlaneTypeTextBox);
 			this->Controls->Add(this->Label);
 			this->Name = L"AddEdit";
-			this->Text = L"AddEdit";
+			this->Text = L"Добавление строки";
+			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedDialog;
+			this->MaximizeBox = false;
+			this->MinimizeBox = false;
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Activated += gcnew System::EventHandler(this, &AddEdit::AddEdit_Activated);
 			this->ResumeLayout(false);
 			this->PerformLayout();
@@ -357,7 +361,8 @@ namespace Practice {
 		}
 
 #pragma endregion
-	private: System::Void DoneButton_Click(System::Object^ sender, System::EventArgs^ e) {
+	private: System::Void DoneButton_Click(System::Object^ sender, System::EventArgs^ e) { 
+		// проверка, что все поля заполнены корректно, и последующая их запись в файл
 		array<TextBox^>^ textBoxes = {PlaneTypeTextBox, ArrivalPointTextBox, DepartureTimeTextBox, ArrivalTimeTextBox, TicketCostTextBox};
 		array<CheckBox^>^ checkBoxes = { checkBox1, checkBox2, checkBox3, checkBox4, checkBox5, checkBox6, checkBox7 };
 		bool flag1 = true;
@@ -385,9 +390,9 @@ namespace Practice {
 			String^ result = String::Concat(id.ToString(), " ", PlaneTypeTextBox->Text, " ", ArrivalPointTextBox->Text, " ", 
 				days, " ", DepartureTimeTextBox->Text, " ", ArrivalTimeTextBox->Text, " ", TicketCostTextBox->Text, "\n");
 
-			if (!mode)
+			if (!mode) // если запущен режим добавления строки
 				File::AppendAllText(BASE, result);
-			else {
+			else { // если запущен режим редактирования строки
 				array<String^>^ lines = File::ReadAllLines(BASE);
 				result = result->Remove(result->Length - 1);
 				for (int i = 0; i < lines->Length; i++)
@@ -407,7 +412,7 @@ namespace Practice {
 	}
 
 private: System::Void PlaneTypeTextBox_Validating(System::Object^ sender, System::ComponentModel::CancelEventArgs^ e) {
-	if (!ValidText(PlaneTypeTextBox->Text))
+	if (!ValidText(PlaneTypeTextBox->Text)) // проверка ввода типа самолёта
 	{
 		e->Cancel = true;
 		Info->Visible = true;
@@ -416,7 +421,7 @@ private: System::Void PlaneTypeTextBox_Validating(System::Object^ sender, System
 }
 
 private: System::Void ArrivalPointTextBox_Validating(System::Object^ sender, System::ComponentModel::CancelEventArgs^ e) {
-	if (!ValidText(ArrivalPointTextBox->Text))
+	if (!ValidText(ArrivalPointTextBox->Text)) // проверка ввода города прибытия
 	{
 		e->Cancel = true;
 		Info->Visible = true;
@@ -425,16 +430,17 @@ private: System::Void ArrivalPointTextBox_Validating(System::Object^ sender, Sys
 }
 
 private: System::Void PlaneTypeTextBox_Validated(System::Object^ sender, System::EventArgs^ e) {
-	Info->Visible = false;
+	Info->Visible = false; // если проверка прошла успешно
 }
 
 private: System::Void ArrivalPointTextBox_Validated(System::Object^ sender, System::EventArgs^ e) {
-	Info->Visible = false;
+	Info->Visible = false; 
 }
 
 private: System::Void AddEdit_Activated(System::Object^ sender, System::EventArgs^ e) {
-	if (mode) {
+	if (mode) { // если запущен режим изменения строки, заполнить все поля информацией из выделенной строки
 		Label->Text = "Изменение строки";
+		this->Text = L"Изменение строки";
 		array<String^>^ lines = File::ReadAllLines(BASE);
 		String^ line;
 		for each (String ^ str in lines)
@@ -458,7 +464,7 @@ private: System::Void AddEdit_Activated(System::Object^ sender, System::EventArg
 }
 
 private: System::Void DepartureTimeTextBox_Validating(System::Object^ sender, System::ComponentModel::CancelEventArgs^ e) {
-	if (!ValidTime(DepartureTimeTextBox->Text)) {
+	if (!ValidTime(DepartureTimeTextBox->Text)) { // проверка ввода времени вылета
 		e->Cancel = true;
 		Info->Visible = true;
 		Info->Text = "Формат ввода времени: чч:мм или ч:мм";
@@ -471,7 +477,7 @@ private: System::Void DepartureTimeTextBox_Validating(System::Object^ sender, Sy
 }
 
 private: System::Void DepartureTimeTextBox_Validated(System::Object^ sender, System::EventArgs^ e) {
-	Info->Visible = false;
+	Info->Visible = false; // если проверка времени вылета прошла успешно
 	String^ text = DepartureTimeTextBox->Text;
 	if (text->Length == 4 && text[1] == ':') {
 		text = String::Concat("0", text);
@@ -480,7 +486,7 @@ private: System::Void DepartureTimeTextBox_Validated(System::Object^ sender, Sys
 }
 
 private: System::Void ArrivalTimeTextBox_Validating(System::Object^ sender, System::ComponentModel::CancelEventArgs^ e) {
-	if (!ValidTime(ArrivalTimeTextBox->Text)) {
+	if (!ValidTime(ArrivalTimeTextBox->Text)) { // проверка ввода времени прибытия
 		e->Cancel = true;
 		Info->Visible = true;
 		Info->Text = "Формат ввода времени: чч:мм или ч:мм";
@@ -502,7 +508,7 @@ private: System::Void ArrivalTimeTextBox_Validated(System::Object^ sender, Syste
 }
 
 private: System::Void TicketCostTextBox_Validated(System::Object^ sender, System::EventArgs^ e) {
-	Info->Visible = false;
+	Info->Visible = false; 
 	String^ text = TicketCostTextBox->Text;
 	if (text->Contains(".")) {
 		text = String::Join(",", text->Split('.'));
@@ -519,10 +525,10 @@ private: System::Void TicketCostTextBox_Validated(System::Object^ sender, System
 }
 
 private: System::Void TicketCostTextBox_Validating(System::Object^ sender, System::ComponentModel::CancelEventArgs^ e) {
-	if (!ValidCost(TicketCostTextBox->Text)) {
+	if (!ValidCost(TicketCostTextBox->Text)) { // проверка ввода цены билета
 		e->Cancel = true;
 		Info->Visible = true;
-		Info->Text = "Цена билета должна быть числом больше нуля";
+		Info->Text = "Цена билета должна быть числом больше нуля и меньше 10 млн.";
 	}
 }
 };

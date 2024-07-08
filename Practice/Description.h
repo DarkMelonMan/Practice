@@ -108,9 +108,8 @@ namespace Practice {
 		}
 #pragma endregion
 	private: System::Void CloseButton_Click(System::Object^ sender, System::EventArgs^ e) {
-		Close();
+		Close(); // закрыть форму
 	}
-
 	};
 }
 

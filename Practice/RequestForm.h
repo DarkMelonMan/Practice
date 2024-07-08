@@ -738,7 +738,11 @@ namespace Practice {
 			this->Controls->Add(this->dataGridView1);
 			this->Margin = System::Windows::Forms::Padding(2);
 			this->Name = L"RequestForm";
-			this->Text = L"RequestForm";
+			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedDialog;
+			this->MaximizeBox = false;
+			this->MinimizeBox = false;
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
+			this->Text = L"Универсальный запрос";
 			this->Activated += gcnew System::EventHandler(this, &RequestForm::RequestForm_Activated);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->EndInit();
 			this->ResumeLayout(false);
@@ -749,10 +753,10 @@ namespace Practice {
 #pragma endregion
 		private: System::Void RequestForm_Activated(System::Object^ sender, System::EventArgs^ e) {
 			FileStream^ file = File::Exists(BASE) ? File::OpenRead(BASE) : File::Create(BASE);
-			file->Close();
+			file->Close(); // если файла не существует, создать и закрыть его
 			array<String^>^ lines = File::ReadAllLines(BASE);
-			array<String^>^ planeTypes = gcnew array<String^>(lines->Length);
-			array<String^>^ arrivalPoints = gcnew array<String^>(lines->Length);
+			array<String^>^ planeTypes = gcnew array<String^>(lines->Length); // все типы самолёта из файла
+			array<String^>^ arrivalPoints = gcnew array<String^>(lines->Length); // все города прибытия из файла
 			int flag;
 			int i = 0, j = 0;
 			for each (String ^ str in lines) {
@@ -779,12 +783,20 @@ namespace Practice {
 					j++;
 				}
 			}
-			PlaneTypeComboBox->Items->AddRange(planeTypes);
-			ArrivalPointComboBox->Items->AddRange(arrivalPoints);
+			for each (String ^ planeType in planeTypes) {
+				if (planeType != nullptr)
+					PlaneTypeComboBox->Items->Add(planeType);
+			}
+			PlaneTypeComboBox->Items->Add(L"");
+			for each (String ^ arrivalPoint in arrivalPoints) {
+				if (arrivalPoint != nullptr)
+					ArrivalPointComboBox->Items->Add(arrivalPoint);
+			}
+			ArrivalPointComboBox->Items->Add(L"");
 			UpdateData();
 		}
 		private: System::Void IDCheckBox_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
-			if (IDCheckBox->Checked) {
+			if (IDCheckBox->Checked) { // если флажок с поиском по ID сменил значение
 				MinIDLabel->Enabled = true;
 				MinIDTextBox->Enabled = true;
 				MaxIDLabel->Enabled = true;
@@ -801,31 +813,31 @@ namespace Practice {
 			UpdateData();
 		}
 		private: System::Void PlaneTypeCheckBox_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
-			if (PlaneTypeCheckBox->Checked) {
+			if (PlaneTypeCheckBox->Checked) { // если флажок с поиском по типу самолёта сменил значение
 				PlaneTypeLabel->Enabled = true;
 				PlaneTypeComboBox->Enabled = true;
 			}
 			else {
+				PlaneTypeComboBox->SelectedItem = PlaneTypeComboBox->Items[PlaneTypeComboBox->Items->Count - 1];
 				PlaneTypeLabel->Enabled = false;
 				PlaneTypeComboBox->Enabled = false;
-				PlaneTypeComboBox->Text = "";
 			}
 			UpdateData();
 		}
 		private: System::Void ArrivalPointCheckBox_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
-			if (ArrivalPointCheckBox->Checked) {
+			if (ArrivalPointCheckBox->Checked) { // если флажок с поиском по городу прибытия сменил значение
 				ArrivalPointLabel->Enabled = true;
 				ArrivalPointComboBox->Enabled = true;
 			}
 			else {
+				ArrivalPointComboBox->SelectedItem = ArrivalPointComboBox->Items[ArrivalPointComboBox->Items->Count - 1];
 				ArrivalPointLabel->Enabled = false;
 				ArrivalPointComboBox->Enabled = false;
-				ArrivalPointComboBox->Text = "";
 			}
 			UpdateData();
 		}
 		private: System::Void DaysCheckBox_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
-			if (DaysCheckBox->Checked) {
+			if (DaysCheckBox->Checked) { // если флажок с поиском по дням вылета сменил значение
 				DaysLabel->Enabled = true;
 				checkBox1->Enabled = true;
 				checkBox2->Enabled = true;
@@ -855,7 +867,7 @@ namespace Practice {
 			UpdateData();
 		}
 		private: System::Void DepTimeCheckBox_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
-			if (DepTimeCheckBox->Checked) {
+			if (DepTimeCheckBox->Checked) { // если флажок с поиском по времени вылета сменил значение
 				MinDepTimeLabel->Enabled = true;
 				MinDepTimeTextBox->Enabled = true;
 				MaxDepTimeLabel->Enabled = true;
@@ -872,7 +884,7 @@ namespace Practice {
 			UpdateData();
 		}
 		private: System::Void ArrTimeCheckBox_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
-			if (ArrTimeCheckBox->Checked) {
+			if (ArrTimeCheckBox->Checked) { // если флажок с поиском по времени прибытия сменил значение
 				MinArrTimeLabel->Enabled = true;
 				MinArrTimeTextBox->Enabled = true;
 				MaxArrTimeLabel->Enabled = true;
@@ -889,7 +901,7 @@ namespace Practice {
 			UpdateData();
 		}
 		private: System::Void TicketCostCheckBox_CheckedChanged(System::Object^ sender, System::EventArgs^ e) {
-			if (TicketCostCheckBox->Checked) {
+			if (TicketCostCheckBox->Checked) { // если флажок с поиском по цене билета сменил значение
 				MinTicketCostLabel->Enabled = true;
 				MinTicketCostTextBox->Enabled = true;
 				MaxTicketCostLabel->Enabled = true;
@@ -906,9 +918,9 @@ namespace Practice {
 			UpdateData();
 		}
 		private: System::Void CloseButton_Click(System::Object^ sender, System::EventArgs^ e) {
-			Close();
+			Close(); // закрыть форму
 		}
-		private: Void UpdateData() {
+		private: Void UpdateData() { // обновить данные из таблицы
 			while (!dataGridView1->Rows[0]->IsNewRow) {
 				dataGridView1->Rows->RemoveAt(0);
 				dataGridView1->Refresh();
@@ -933,7 +945,7 @@ namespace Practice {
 			else Info->Visible = false;
 		}
 
-	private: bool CheckLine(String^ line) {
+	private: bool CheckLine(String^ line) { // проверка строки файла на соответствие критериям поиска
 		int minID, maxID; 
 		Int32::TryParse(MinIDTextBox->Text, minID);
 		Int32::TryParse(MaxIDTextBox->Text, maxID);
@@ -998,7 +1010,7 @@ namespace Practice {
 
 		
 		private: System::Void MinIDTextBox_Validating(System::Object^ sender, System::ComponentModel::CancelEventArgs^ e) {
-			if (!ValidID(MinIDTextBox->Text)) {
+			if (!ValidID(MinIDTextBox->Text)) { // проверка ввода минимального ID
 				e->Cancel = true;
 				Info->Visible = true;
 				Info->Text = "Введите число входящее в диапазон ID номеров таблицы";
@@ -1010,7 +1022,7 @@ namespace Practice {
 			}
 		}
 		private: System::Void MaxIDTextBox_Validating(System::Object^ sender, System::ComponentModel::CancelEventArgs^ e) {
-			if (!ValidID(MaxIDTextBox->Text)) {
+			if (!ValidID(MaxIDTextBox->Text)) { // проверка ввода максимального ID
 				e->Cancel = true;
 				Info->Visible = true;
 				Info->Text = "Введите число входящее в диапазон ID номеров таблицы";
@@ -1023,47 +1035,47 @@ namespace Practice {
 		}
 	
 		private: System::Void MinDepTimeTextBox_Validating(System::Object^ sender, System::ComponentModel::CancelEventArgs^ e) {
-			if (!ValidTime(MinDepTimeTextBox->Text)) {
+			if (!ValidTime(MinDepTimeTextBox->Text)) { // проверка ввода минимального времени вылета
 				e->Cancel = true;
 				Info->Visible = true;
 				Info->Text = "Формат ввода времени: чч:мм или ч:мм";
 			}
 		}
 		private: System::Void MaxDepTimeTextBox_Validating(System::Object^ sender, System::ComponentModel::CancelEventArgs^ e) {
-			if (!ValidTime(MaxDepTimeTextBox->Text)) {
+			if (!ValidTime(MaxDepTimeTextBox->Text)) { // проверка ввода максимального времени вылета
 				e->Cancel = true;
 				Info->Visible = true;
 				Info->Text = "Формат ввода времени: чч:мм или ч:мм";
 			}
 		}
 		private: System::Void MinArrTimeTextBox_Validating(System::Object^ sender, System::ComponentModel::CancelEventArgs^ e) {
-			if (!ValidTime(MinArrTimeTextBox->Text)) {
+			if (!ValidTime(MinArrTimeTextBox->Text)) { // проверка ввода минимального времени прибытия
 				e->Cancel = true;
 				Info->Visible = true;
 				Info->Text = "Формат ввода времени: чч:мм или ч:мм";
 			}
 		}
 		private: System::Void MaxArrTimeTextBox_Validating(System::Object^ sender, System::ComponentModel::CancelEventArgs^ e) {
-			if (!ValidTime(MaxArrTimeTextBox->Text)) {
+			if (!ValidTime(MaxArrTimeTextBox->Text)) { // проверка ввода максимального времени прибытия
 				e->Cancel = true;
 				Info->Visible = true;
 				Info->Text = "Формат ввода времени: чч:мм или ч:мм";
 			}
 		}
 		private: System::Void MinTicketCostTextBox_Validating(System::Object^ sender, System::ComponentModel::CancelEventArgs^ e) {
-			if (!ValidCost(MinTicketCostTextBox->Text)) {
+			if (!ValidCost(MinTicketCostTextBox->Text)) { // проверка ввода минимальной цены билета
 				e->Cancel = true;
 				Info->Visible = true;
-				Info->Text = "Цена билета должна быть числом больше нуля";
+				Info->Text = "Цена билета должна быть числом больше нуля и меньше 10 млн.";
 			}
-			else if (!ValidCost(MinTicketCostTextBox->Text, MaxTicketCostTextBox->Text)) {
+			else if (!ValidCost(MinTicketCostTextBox->Text, MaxTicketCostTextBox->Text)) { 
 				e->Cancel = true;
 				Info->Visible = true;
 				Info->Text = "Минимальная цена билета должна быть меньше максимальной";
 			}
 		}
 		private: System::Void MaxTicketCostTextBox_Validating(System::Object^ sender, System::ComponentModel::CancelEventArgs^ e) {
-			if (!ValidCost(MaxTicketCostTextBox->Text)) {
+			if (!ValidCost(MaxTicketCostTextBox->Text)) { // проверка ввода максимальной цены билета
 				e->Cancel = true;
 				Info->Visible = true;
 				Info->Text = "Цена билета должна быть числом больше нуля";

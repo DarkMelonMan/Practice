@@ -259,7 +259,11 @@ namespace Practice {
 			this->Controls->Add(this->dataGridView1);
 			this->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
 			this->Name = L"BaseForm";
-			this->Text = L"BaseForm";
+			this->Text = L"База данных";
+			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedDialog;
+			this->MaximizeBox = false;
+			this->MinimizeBox = false;
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Activated += gcnew System::EventHandler(this, &BaseForm::BaseForm_Activated);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->EndInit();
 			this->ResumeLayout(false);
@@ -267,17 +271,14 @@ namespace Practice {
 
 		}
 #pragma endregion
-	private: System::Void dataGridView1_CellContentClick(System::Object^ sender, System::Windows::Forms::DataGridViewCellEventArgs^ e) {
-	}
-
-	private: Void UpdateData() {
+	private: Void UpdateData() { // очистить таблицу и вывести новые данные
 		while (!dataGridView1->Rows[0]->IsNewRow) {
 			dataGridView1->Rows->RemoveAt(0);
 			dataGridView1->Refresh();
 		}
 		FileStream^ file = File::Exists(BASE) ? File::OpenRead(BASE) : File::Create(BASE);
-		file->Close();
-		array<String^>^ lines = File::ReadAllLines(BASE);
+		file->Close(); // если файла не существует, создать его и закрыть
+		array<String^>^ lines = File::ReadAllLines(BASE); // считать все строки файла
 		for each (String ^ str in lines)
 		{
 			DataGridViewRow^ row = gcnew DataGridViewRow();
@@ -286,26 +287,28 @@ namespace Practice {
 				row->Cells[i]->Value = str->Split(L' ')[i];
 			dataGridView1->Rows->Add(row);
 		}
-		if (dataGridView1->Rows[0]->IsNewRow) {
+		if (dataGridView1->Rows[0]->IsNewRow) { // если файл пуст, вывести сообщение об этом
 			this->Info->Visible = true;
 			this->Info->Text = "Файл пуст";
 		}
+		else
+			this->Info->Visible = false;
 	}
 
 	private: System::Void AddRowClick(System::Object^ sender, System::EventArgs^ e) {
 		mode = 0;
 		id = dataGridView1->Rows->Count;
 		AddEdit^ form = gcnew(AddEdit);
-		form->ShowDialog();
+		form->ShowDialog(); // открыть форму добавления новой строки
 	}
 
 	private: System::Void DeleteRowClick(System::Object^ sender, System::EventArgs^ e) {
-		if (!dataGridView1->CurrentRow->IsNewRow) {
+		if (!dataGridView1->CurrentRow->IsNewRow) { // если выделенная строка не пустая
 			int local_id = Int32::Parse(dataGridView1->CurrentRow->Cells[0]->Value->ToString());
-			dataGridView1->Rows->RemoveAt(dataGridView1->CurrentRow->Index);
+			dataGridView1->Rows->RemoveAt(dataGridView1->CurrentRow->Index); // удалить из формы с таблицей текущую строку
 			dataGridView1->Refresh();
 			cli::array<String^>^ lines = File::ReadAllLines(BASE);
-			cli::array<String^>^ new_lines = gcnew array<String^>(lines->Length - 1);
+			cli::array<String^>^ new_lines = gcnew array<String^>(lines->Length - 1); // текст нового файла без удалённой строки
 			int i = 0;
 			for each (String ^ str in lines)
 			{
@@ -330,20 +333,19 @@ namespace Practice {
 		}
 	}
 	private: System::Void BaseForm_Activated(System::Object^ sender, System::EventArgs^ e) {
-		if (admin == 0) {
+		if (admin == 0) { // если режим администратора выключен, отключить некоторые кнопки
 			this->DeleteRow->Enabled = false;
 			this->EditButton->Enabled = false;
-			this->RequestButton->Enabled = false;
 			this->AddRow->Enabled = false;
 		}
 		UpdateData();
 	}
 	private: System::Void EditButton_Click(System::Object^ sender, System::EventArgs^ e) {
-		if (!dataGridView1->CurrentRow->IsNewRow) {
+		if (!dataGridView1->CurrentRow->IsNewRow) { // если выбрана не пустая строка
 			id = Int32::Parse(dataGridView1->CurrentRow->Cells[0]->Value->ToString());
 			mode = 1;
 			AddEdit^ form = gcnew(AddEdit);
-			form->ShowDialog();
+			form->ShowDialog(); // открыть форму изменения строки
 		}
 		else {
 			this->Info->Visible = true;
@@ -351,11 +353,17 @@ namespace Practice {
 		}
 	}
 private: System::Void ExitButtonClick(System::Object^ sender, System::EventArgs^ e) {
-	Close();
+	Close(); // закрыть форму
 }
 private: System::Void RequestButton_Click(System::Object^ sender, System::EventArgs^ e) {
-	RequestForm^ form = gcnew(RequestForm);
-	form->ShowDialog();
-}
-};
+	if (!dataGridView1->Rows[0]->IsNewRow) { // если таблица не пуста
+		RequestForm^ form = gcnew(RequestForm);
+		form->ShowDialog(); // открыть форму с универсальным запросом
+	}
+	else {
+		this->Info->Visible = true;
+		this->Info->Text = "Файл пуст";
+	}
+	}
+	};
 }

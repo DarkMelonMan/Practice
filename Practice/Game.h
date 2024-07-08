@@ -66,6 +66,7 @@ namespace Practice {
 	int matchesFound;
 	int bestTime;
 	bool lose;
+	bool showSecond = false;
 	const int GAMETIME = 300;
 	const int EXTRASECOND = 100;
 	array<String^>^ hiddenEmojis = gcnew array<String^>(16);
@@ -304,6 +305,7 @@ namespace Practice {
 			// 
 			// BestTimeTextBox
 			// 
+			this->BestTimeTextBox->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12));
 			this->BestTimeTextBox->Location = System::Drawing::Point(303, 486);
 			this->BestTimeTextBox->Multiline = true;
 			this->BestTimeTextBox->Name = L"BestTimeTextBox";
@@ -345,8 +347,12 @@ namespace Practice {
 			this->Controls->Add(this->button3);
 			this->Controls->Add(this->button2);
 			this->Controls->Add(this->button1);
+			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedDialog;
+			this->MaximizeBox = false;
+			this->MinimizeBox = false;
 			this->Name = L"Game";
-			this->Text = L"Game";
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
+			this->Text = L"Игра «Найди все пары»";
 			this->Activated += gcnew System::EventHandler(this, &Game::Game_Activated);
 			this->ResumeLayout(false);
 			this->PerformLayout();
@@ -355,12 +361,12 @@ namespace Practice {
 
 #pragma endregion
 
-		private: Void SetUpGame() {
+		private: Void SetUpGame() { // установить начальные параметры игры
 			FileStream^ file = File::Exists(BEST_TIME) ? File::OpenWrite(BEST_TIME) : File::Create(BEST_TIME);
 			file->Close();
 			if (!Int32::TryParse(File::ReadAllText(BEST_TIME), bestTime))
 				bestTime = 300;
-			BestTimeTextBox->Text = (bestTime / 10).ToString("0с");
+			BestTimeTextBox->Text = String::Concat("Лучшее время:", (bestTime / 10).ToString("0с"));
 			lose = false;
 			Random^ random = gcnew Random(); // UTF-16
 			array<String^>^ allEmoji = { u8"\U0001F419", u8"\U0001F40D", u8"\U0001F98D", u8"\U0001F996", u8"\U0001F994", u8"\U0001F989", u8"\U0001F995", u8"\U0001F982", u8"\U0001F412", u8"\U0001F9A7", u8"\U0001F98F", u8"\U0001F988", u8"\U0001F40B", u8"\U0001F409", u8"\U0001F413", u8"\U0001F987", u8"\U0001F41E", u8"\U0001F577", u8"\U0001F420"};
@@ -390,10 +396,11 @@ namespace Practice {
 			}
 		tenthsOfSecondsElapsed = 0;
 		matchesFound = 0;
+		timer1->Start();
 	}
 
 	private: System::Void timer1_Tick(System::Object^ sender, System::EventArgs^ e) {
-		tenthsOfSecondsElapsed++;
+		tenthsOfSecondsElapsed++; // на каждом тике таймера проверка прошедшего времени
 		if (tenthsOfSecondsElapsed % EXTRASECOND == 0) {
 			for (int i = 0; i < 16; i++){
 				Button^ button = buttons[i];
@@ -410,7 +417,7 @@ namespace Practice {
 		else {
 			lose = true;
 		}
-		if (matchesFound == 8 || lose)
+		if (matchesFound == 8 || lose) // если игра закончилась
 		{
 			timer1->Stop();
 			if (!lose) {
@@ -426,9 +433,11 @@ namespace Practice {
 			}
 		}
 	}
+
 private: System::Void CloseButton_Click(System::Object^ sender, System::EventArgs^ e) {
-	Close();
+	Close(); // закрыть форму
 }
+
 private: System::Void Game_Activated(System::Object^ sender, System::EventArgs^ e) {
 	buttons[0] = button1; buttons[1] = button2; buttons[2] = button3; buttons[3] = button4;
 	buttons[4] = button5; buttons[5] = button6; buttons[6] = button7; buttons[7] = button8;
@@ -438,30 +447,38 @@ private: System::Void Game_Activated(System::Object^ sender, System::EventArgs^ 
 }
 
 private: System::Void TimeTextBox_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
-	if (matchesFound == 8 || lose)
+	if (matchesFound == 8 || lose) // если игра закончилась, начать новую
 		SetUpGame();
 }
 
 	   Button^ lastButtonClicked;
+	   Button^ lastShownButtonClicked;
 	   bool findingMatch = false;
 
 private: System::Void button_MouseDown(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
-	Button^ button = (Button^)sender;
+	Button^ button = (Button^)sender; // при нажатии на кнопку со знаком вопроса
 	int index = Array::IndexOf(buttons, button);
-	if (!findingMatch) {
+	if (button != lastShownButtonClicked && showSecond) { // скрыть вторую нажатую кнопку
+		lastShownButtonClicked->Text = "?";
+		showSecond = false;
+	}
+	if (!findingMatch) { // если это первая из пары нажатая кнопка 
 		button->Text = hiddenEmojis[index];
 		lastButtonClicked = button;
 		findingMatch = true;
 	}
-	else if (hiddenEmojis[index] == lastButtonClicked->Text && lastButtonClicked != button) {
+	else if (hiddenEmojis[index] == hiddenEmojis[Array::IndexOf(buttons, lastButtonClicked)] && lastButtonClicked != button) { // если нажата вторая из пары кнопка и их эмодзи совпали
 		matchesFound++;
 		findingMatch = false;
 		lastButtonClicked->Visible = false;
 		button->Visible = false;
 	}
-	else {
+	else { // если нажата вторая из пары кнопка и их эмодзи не совпали
+		button->Text = hiddenEmojis[index];
+		lastShownButtonClicked = button;
 		lastButtonClicked->Text = "?";
 		findingMatch = false;
+		showSecond = true;
 	}
 }
 };

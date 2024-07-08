@@ -178,6 +178,10 @@ namespace Practice {
 			this->Controls->Add(this->label1);
 			this->Name = L"MainAppMenu";
 			this->Text = L"Главное меню";
+			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedDialog;
+			this->MaximizeBox = false;
+			this->MinimizeBox = false;
+			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Activated += gcnew System::EventHandler(this, &MainAppMenu::MainAppMenu_Activated);
 			this->ResumeLayout(false);
 			this->PerformLayout();
@@ -186,29 +190,29 @@ namespace Practice {
 #pragma endregion
 	private: System::Void DescriptionButton_Click(System::Object^ sender, System::EventArgs^ e) {
 		Description^ form = gcnew(Description);
-		form->ShowDialog();
+		form->ShowDialog(); // открыть форму со справкой
 	}
 	private: System::Void ExitButton_Click(System::Object^ sender, System::EventArgs^ e) {
-		exit(0);
+		exit(0); // выход из программы
 	}
 	private: System::Void BaseButton_Click(System::Object^ sender, System::EventArgs^ e) {
 		BaseForm^ form = gcnew(BaseForm);
-		form->ShowDialog();
+		form->ShowDialog(); // открыть форму с таблицей
 	}
 	private: System::Void AdminModeButton_Click(System::Object^ sender, System::EventArgs^ e) {
 		AdminMode^ form = gcnew(AdminMode);
-		form->ShowDialog();
+		form->ShowDialog(); // открыть форму с вводом пароля
 	}
 	private: System::Void ChangeModeButton_Click(System::Object^ sender, System::EventArgs^ e) {
-		admin = 0;
+		admin = 0; // если пользователь решил выйти из режима администратора
 		this->ChangeModeButton->Visible = false;
 		this->AdminModeButton->Enabled = true;
 		this->Mode->Text = L"Режим пользователя";
 		this->Mode->Location = System::Drawing::Point(310, 9);
 
 	}
-	private: System::Void MainAppMenu_Activated(System::Object^ sender, System::EventArgs^ e) {
-		if (admin == 1) {
+	private: System::Void MainAppMenu_Activated(System::Object^ sender, System::EventArgs^ e) { // при открытии окна с формой
+		if (admin == 1) { // если включен режим администратора
 			this->AdminModeButton->Enabled = false;
 			this->Mode->Text = L"Режим администратора";
 			this->Mode->Location = System::Drawing::Point(290, 9);
@@ -217,7 +221,7 @@ namespace Practice {
 	}
 	private: System::Void GameButton_Click(System::Object^ sender, System::EventArgs^ e) {
 		Game^ form = gcnew(Game);
-		form->ShowDialog();
+		form->ShowDialog(); // открыть форму с игрой
 	}
 };
 }

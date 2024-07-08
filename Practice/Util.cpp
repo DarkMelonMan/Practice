@@ -5,11 +5,11 @@ using namespace System::Collections;
 using namespace System::IO;
 
 
-bool ValidText(String^ text) {
+bool ValidText(String^ text) { // проверка ввода строки
 	return text->Length <= 30 && text->Length > 1 && !text->Contains(" ");
 }
 
-bool ValidTime(String^ text) {
+bool ValidTime(String^ text) { // проверка ввода времени
 	int hours, minutes;
 	if (text->Length == 4 && text[1] == ':') {
 		if (Int32::TryParse(text[0].ToString(), hours) && Int32::TryParse(String::Concat(text[2], text[3]), minutes)) {
@@ -26,7 +26,7 @@ bool ValidTime(String^ text) {
 	return false;
 }
 
-bool ValidCost(String^ text) {
+bool ValidCost(String^ text) { // проверка ввода цены
 	int fractionalCost;
 	int intCost;
 	if (text->Contains(",") && !text->Contains(".")) {
@@ -46,7 +46,7 @@ bool ValidCost(String^ text) {
 	return false;
 }
 
-bool ValidCost(String^ text1, String^ text2) {
+bool ValidCost(String^ text1, String^ text2) { // проверка ввода минимальной и максимальной цены
 	if (ValidCost(text1) && ValidCost(text2)) {
 		double cost1, cost2;
 		if (text1->Contains(".")) {
@@ -62,7 +62,7 @@ bool ValidCost(String^ text1, String^ text2) {
 	return true;
 }
 
-int GetTimeInMinutes(String^ time) {
+int GetTimeInMinutes(String^ time) { // перевод времени в кол-во минут
 	if (ValidTime(time)) {
 		int hours, minutes;
 		if (time->Length == 4 && time[1] == ':') {
@@ -78,7 +78,7 @@ int GetTimeInMinutes(String^ time) {
 	return 0;
 }
 
-bool ValidTime(String^ departureTime, String^ arrivalTime) {
+bool ValidTime(String^ departureTime, String^ arrivalTime) { // проверка времени прибытия и времени вылета
 	if (ValidTime(departureTime) && ValidTime(arrivalTime)) {
 		int intDepTime = GetTimeInMinutes(departureTime);
 		int intArrTime = GetTimeInMinutes(arrivalTime);
@@ -89,13 +89,13 @@ bool ValidTime(String^ departureTime, String^ arrivalTime) {
 	return true;
 }
 
-bool ValidID(String^ text) {
+bool ValidID(String^ text) { // проверка ввода ID номера рейса
 	int ID;
 	array<String^>^ lines = File::ReadAllLines(BASE);
 	return (Int32::TryParse(text, ID) && ID > 0 && ID <= lines->Length);
 }
 
-bool ValidID(String^ text1, String^ text2) {
+bool ValidID(String^ text1, String^ text2) { // проверка ввода минимального и максимального ID
 	if (ValidID(text1) && ValidID(text2)) {
 		int min = Int32::Parse(text1), max = Int32::Parse(text2);
 		return min <= max;
